@@ -31,5 +31,5 @@ $ poetry install
 # modify config.yaml
 
 # run
-poetry run python3  ./main.py 
+$ poetry run python3  ./main.py 
 ```
