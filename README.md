@@ -51,10 +51,10 @@ $ poetry run python3  ./main.py
 
 高级用法
 
-定义自己的[send_message function()](https://github.com/Hootrix/RSS2Channel/blob/5719f210958069072b340a901904b9624fb31476/main.py#L19)方法准备，用于设置发布消息格式。
+定义自己的[send_message function()](https://github.com/Hootrix/RSS2Channel/blob/5719f210958069072b340a901904b9624fb31476/main.py#L19)方法，用于设置发布消息格式。
 查看：https://github.com/eternnoir/pyTelegramBotAPI#telebot
 
 --
 
-Define your own [send_message The function ()] (https://github.com/Hootrix/RSS2Channel/blob/5719f210958069072b340a901904b9624fb31476/main.py#L19) method, Set the format of a published message.
+Define your  [send_message The function ()] (https://github.com/Hootrix/RSS2Channel/blob/5719f210958069072b340a901904b9624fb31476/main.py#L19) method, Set the format of a published message.
 Look at: https://github.com/eternnoir/pyTelegramBotAPI#telebot
