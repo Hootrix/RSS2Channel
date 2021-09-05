@@ -1,4 +1,3 @@
-from feedparser.exceptions import ThingsNobodyCaresAboutButMe
 import telebot,logging,time
 import feedparser
 import diskcache as dc
