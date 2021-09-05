@@ -5,6 +5,10 @@
 RSS to Telegram Channel 
 via Telegram bot
 
+# DEMO
+
+[@天府通消息](https://t.me/tianfutong)
+
 # PREPARE
 
 准备
