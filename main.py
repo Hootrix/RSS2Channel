@@ -2,6 +2,7 @@ import telebot,logging,time
 import feedparser
 import diskcache as dc
 import yaml,os
+import datetime
 
 """
 RSS源的Telegram频道消息发布
@@ -25,12 +26,20 @@ def send_message(cache_key,channel,feed_item):
   title = feed_item.title if feed_item.title == feed_item.description else '%s\n%s'%(feed_item.title,feed_item.description)
   msg = f'<b>{title}</b>\n\n{feed_item.description}\n\n{feed_item.link}'
   # rel = bot.send_photo(channel,feed_item.guid,msg,parse_mode='HTML')
+  
+  # TODO
+  return 
+
   rel = bot.send_message(channel,msg,parse_mode='HTML')
   if hasattr(rel,'message_id'):
     logging.debug(f'message_id--> {rel.message_id}')
     #todo 后续操作。。。
-    cache.set(cache_key,feed_item)#标记最近发布
-    
+    try:
+      cache.set(cache_key,feed_item,retry=True)#标记最近发布
+    except dc.Timeout:
+      logging.warning(f'message_id--> {rel.message_id}')
+
+
 
 def track_rss(channel,rss,callback = None):
   """
@@ -41,34 +50,41 @@ def track_rss(channel,rss,callback = None):
       rss 订阅源 e.g. http://url/feed or /path/rss.xml
       callback 发布消息的回调拦截
   """
-  cache_key = '__RSS2CHANNEL_LAST_POST'
+  cache_key = '__RSS2CHANNEL_LAST_POST' # 只记录最新发布的item
   #读取rss
-  _feed = feedparser.parse(rss)
-  feed = sorted(_feed['items'], key=lambda item: item["updated_parsed"],reverse=True)#按照时间降序
+  _feeds = feedparser.parse(rss)
+
+# 检查补充updated_parsed数据
+  now = datetime.datetime.now()
+  for index,item in enumerate(_feeds['items']):
+    if 'updated_parsed' not in item or not item["updated_parsed"]:
+      _feeds['items'][index]['updated_parsed'] = now # 默认当前时间
+
+  feeds = sorted(_feeds['items'], key=lambda item: item["updated_parsed"],reverse=True)#按照时间降序
   if callback and callable(callback):
     logging.debug('execute callable: func(feed,bot)')
-    callable(feed,bot)
+    callable(feeds,bot)
   else:#默认处理
     find_cache = cache.get(cache_key,default=None) #查询上一次发布的信息
     if find_cache:#之前有过发布记录
       # publishing = []
-      guids = [i.guid for i in feed]
+      guids = [i.guid for i in feeds]
       if find_cache.guid in guids:#存在之前的发布信息
         index = guids.index(find_cache.guid)
         if index != 0:#不是最新的消息。最新消息未发送
-          for i in reversed(feed[:index]):# 从旧到新发布
+          for i in reversed(feeds[:index]):# 从旧到新发布
             logging.debug('find new message:'+i.title)
             send_message(cache_key,channel,i)
             time.sleep(1)
         else:
           logging.debug('no update.')
       else:#不存在之前信息 则发布所有
-        for i in reversed(feed):# 从旧到新发布
+        for i in reversed(feeds):# 从旧到新发布
           if i.updated_parsed >= find_cache.updated_parsed:# 仅仅是时间比那条新的才会发布  避免重复发布（因为rss源有可能会删除其中的消息）
             send_message(cache_key,channel,i)
             time.sleep(1)
     else:# 第一次发布
-      cache.set(cache_key,feed[0]) # 下次更新生效
+      cache.set(cache_key,feeds[0]) # 下次更新生效
       logging.debug('not found cache,send a new message next time.')
 
 

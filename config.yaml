@@ -1,5 +1,21 @@
 
-RSS: https://www.hhtjim.com/feed
+RSS: http://127.0.0.1:8000/ghac.xml
 tg-channel: '@tianfutong'
 bot-token: 90000006:AA000-XXXX-00000000000
-DEBUG: false
+DEBUG: true
+
+
+
+# feeds:
+#   - source: http://127.0.0.1:8000/ghac.xml
+#     tg_channel: '@tianfutong'
+#     bot_token: 90000006:AA000-XXXX-00000000000
+#     template: "asdasd\n<br/>asd{title}"
+#     DEBUG: false
+
+#   - source: http://127.0.0.1:8000/ghac.xml
+#     tg_channel: '@tianfutong'
+#     bot_token: 90000006:AA000-XXXX-00000000000
+#     template: "asdasd\n<br/>asd{title}"
+#     DEBUG: false
+  
