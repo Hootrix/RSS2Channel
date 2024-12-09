@@ -1,5 +1,11 @@
 # RSS2CHANNEL
 
+> [!WARNING]  
+> This item is no longer maintained and was recently migrated to
+> https://github.com/Hootrix/rss2telegram
+
+
+
 通过bot发布RSS源消息到telegram频道
 
 RSS to Telegram Channel 
